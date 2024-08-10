@@ -1,0 +1,47 @@
+- name: Configurar servidores
+  hosts: servers
+  become: yes  # Usa sudo para tareas que requieran privilegios de administrador
+  tasks:
+    - name: Actualizar cache de software de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Instalar cowsay
+      apt:
+        name: cowsay
+        state: present
+
+    - name: Crear archivo de ejemplo
+      file:
+        path: /tmp/archivo_ejemplo.txt
+        state: touch
+
+    - name: Copiar archivo al servidor
+      copy:
+        src: /mnt/c/Users/Gabriel/Documents/archivo.txt  # Cambia esto a la ruta local de tu archivo
+        dest: /tmp/archivo_copiado.txt
+
+    - name: Crear carpetas de ejemplo
+      file:
+        path: /tmp/carpeta_ejemplo
+        state: directory
+
+    - name: Iniciar el servicio de Apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Agregar usuario al servidor
+      user:
+        name: nuevo_usuario
+        state: present
+        create_home: yes
+
+    - name: Ejecutar script en el servidor
+      command: /usr/bin/echo "Script ejecutado correctamente" > /tmp/resultado_script.txt
